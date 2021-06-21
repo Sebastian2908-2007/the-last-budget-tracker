@@ -1,4 +1,4 @@
-const { get } = require("mongoose");
+
 
 // var that holds connection
 let db;
@@ -19,7 +19,7 @@ request.onsuccess = function(event) {
     db = event.target.result;
     // check if app is online, if it is run upload budget() function to send all local db data to the api
     if (navigator.onLine) {
-        // uploadBudget();
+         uploadBudget();
     }
 };
 
@@ -49,7 +49,8 @@ function uploadBudget() {
 
     // get all records from store and set to variable
     const getAll = budgetObjectStore.getAll();
-
+    
+    // upon a successful .getAll() execution, run this function
     getAll.onsuccess = function() {
         // if there was data in indexedDb's store lets send it to the api server
         if(getAll.result.length > 0) {
@@ -67,8 +68,20 @@ function uploadBudget() {
                     throw new Error(serverResponse);
                 }
                 // open one more transaction
-                
+                const transaction = db.transaction(['new_budget'], 'readwrite');
+                // access the new_budget object store
+                const budgetObjectStore = transaction.objectStore('new_budget');
+                // clear all items in your store
+                budgetObjectStore.clear();
+
+                alert('All saved budgets has been submitted');
+            })
+            .catch(err => {
+                console.log(err);
             })
         }
     }
-}
+};
+
+// listen for app coming back online
+window.addEventListener('online', uploadBudget);
