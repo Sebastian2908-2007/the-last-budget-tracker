@@ -48,7 +48,7 @@
 <script>
   (function() {
     if("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/public/service-worker.js")
+      navigator.serviceWorker.register("The-Last-Budget-Tracker/public/service-worker.js")
       .then(() => console.log("Service worker registered successfully"))
       .catch(error => console.log("service worker registration failed:", error));
 
